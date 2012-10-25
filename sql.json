@@ -1,6 +1,6 @@
 {
 	"default_table_field":[
-			{"name":"key","type":"VARCHAR(255)","indexed":true},
+			{"name":"urlsafe","type":"VARCHAR(255)","indexed":true},
 			{"name":"createdate","type":"DATETIME","indexed":true},
 			{"name":"modifydate","type":"DATETIME","indexed":true}
 	],
@@ -11,14 +11,15 @@
 		"field":[
 			{"name":"sns","type":"VARCHAR(255)","indexed":true},
 			{"name":"id","type":"VARCHAR(255)","indexed":true},
+			{"name":"status","type":"INTEGER","indexed":true},
 			{"name":"name","type":"VARCHAR(255)","indexed":false},
+			{"name":"canpost","type":"BOOLEAN","indexed":false},
 			{"name":"picsmallurl","type":"TEXT","indexed":false},
 			{"name":"picbigurl","type":"TEXT","indexed":false},
 			{"name":"picbigleft","type":"FLOAT","indexed":false},
 			{"name":"picbigtop","type":"FLOAT","indexed":false},
 			{"name":"picbigright","type":"FLOAT","indexed":false},
 			{"name":"picbigbottom","type":"FLOAT","indexed":false},
-			{"name":"status","type":"INTEGER","indexed":true},
 			{"name":"modifycount","type":"INTEGER","indexed":true}
 		]
 	},
@@ -36,6 +37,7 @@
 		"field":[
 			{"name":"sns","type":"VARCHAR(255)","indexed":true},
 			{"name":"id","type":"VARCHAR(255)","indexed":true},
+			{"name":"status","type":"INTEGER","indexed":true},
 			{"name":"name","type":"VARCHAR(255)","indexed":true},
 			{"name":"coin","type":"INTEGER","indexed":true},
 			{"name":"gem","type":"INTEGER","indexed":true},
@@ -98,10 +100,17 @@
 	],
 	
 	"query":[
+		{"name":"select_sns_user_by_status_one","table":"snsuser","query":"SELECT * FROM snsuser WHERE sns = '%s' AND status = '%i' LIMIT 1"},
 		{"name":"select_sns_user_by_sns_id","table":"snsuser","query":"SELECT * FROM snsuser WHERE sns = '%s' AND id = '%s' LIMIT 1"},
 		{"name":"select_sns_user_by_sns_status_modifycount","table":"snsuser","query":"SELECT * FROM snsuser WHERE sns = '%s' AND status = '%i' AND modifycount = '%i'"},
 		{"name":"select_sns_user_by_sns_status_modifycount_dequal","table":"snsuser","query":"SELECT * FROM snsuser WHERE sns = '%s' AND status = '%i' AND modifycount <= '%i'"},
-		{"name":"count_by_sns_status_id","table":"user","query":"SELECT COUNT(id) FROM user WHERE sns = '%s' AND status = '%i' AND id = '%s'"},,
-		{"name":"select_user_by_id","table":"user","query":"SELECT * FROM user WHERE localid = '%i'"}
+		{"name":"count_user_by_sns_status_id","table":"user","query":"SELECT COUNT(id) FROM user WHERE sns = '%s' AND status = '%i' AND id = '%s'"},
+		{"name":"main_cell_size","table":"relation","query":"SELECT COUNT(urlsafe) FROM relation WHERE urlsafe is not NULL"},
+		{"name":"select_user_sns_id_one","table":"user","query":"SELECT * FROM user WHERE sns = '%s' AND id = '%s' LIMIT 1"},
+		{"name":"select_user_sns_status","table":"user","query":"SELECT * FROM user WHERE sns = '%s' AND status = '%i'"},
+		{"name":"select_user_sns_status_one","table":"user","query":"SELECT * FROM user WHERE sns = '%s' AND status = '%i' LIMIT 1"},
+		{"name":"select_user_key_one","table":"user","query":"SELECT * FROM user WHERE urlsafe = '%s' LIMIT 1"},
+		{"name":"select_relation_key_one","table":"relation","query":"SELECT * FROM relation WHERE urlsafe = '%s' LIMIT 1"},
+		{"name":"main_cell","table":"relation","query":"SELECT * FROM relation ORDER BY modifydate DESC LIMIT 1 OFFSET '%i'"}
 	]
 }

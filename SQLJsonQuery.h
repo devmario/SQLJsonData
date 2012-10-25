@@ -13,10 +13,11 @@
 #include "SQLJsonLive.h"
 #include <vector>
 #include <sqlite3.h>
-#include <list.h>
+#include <list>
 
-#define DB_PATH "/data.db"
-#define DB_INFO_PATH "/sql.json"
+#include "Device.h"
+#define DB_PATH (Device::Manager::Share()->GetDocumentPath() + "/data.db")
+#define DB_INFO_PATH (Device::Manager::Share()->GetResourcePath() + "/sql.json")
 
 namespace SQLJson {
 	class Query : public Json::Value {
@@ -30,6 +31,7 @@ namespace SQLJson {
 		std::list<Live*> list_live;
 		
 		Query();
+		virtual ~Query();
 		
 		static int _SQL_DATA_CALLBACK(void* _reference, int _field_length, char** _field, char** _field_name);
 		static int _SQL_COUNT_CALLBACK(void* _reference, int _field_length, char** _field, char** _field_name);
@@ -58,6 +60,8 @@ namespace SQLJson {
 		//USE
 		/******************************************************************************/
 		static Query* Share();
+		
+		static bool Drop();
 		
 		bool Add(std::string _table_name, Json::Value _value, bool _is_response);
 		

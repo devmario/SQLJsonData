@@ -15,6 +15,10 @@
 
 using namespace SQLJson;
 
+#ifdef DEBUG
+int __DEBUG_DATA = 0;
+#endif
+
 Data::Data(Live* _live, int _unique) {
 	live = _live;
 	unique_id = _unique;
@@ -22,11 +26,23 @@ Data::Data(Live* _live, int _unique) {
 	update = 0;
 	is_live = true;
 	Retain();
+	
+#ifdef DEBUG
+	__DEBUG_DATA++;
+	std::cout << "==== SQLJson::DATA in mem count ==== " << __DEBUG_DATA << "\n";
+#endif
 }
 
 Data::~Data() {
-	if(is_live)
-		live->UnregistData(this);
+	if(is_live) {
+		if(live)
+			live->UnregistData(this);
+	}
+	
+#ifdef DEBUG
+	__DEBUG_DATA--;
+	std::cout << "==== SQLJson::DATA in mem count ==== " << __DEBUG_DATA << "\n";
+#endif
 }
 
 bool Data::Update(Json::Value _value, bool _is_response) {

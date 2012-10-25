@@ -25,6 +25,7 @@ Data* Live::GetIsOpenedData(unsigned int _index_unique) {
 	while(_it != list_data.end()) {
 		if((*_it)->GetUniqueID() == _index_unique)
 			return *_it;
+		_it++;
 	}
 	return NULL;
 }

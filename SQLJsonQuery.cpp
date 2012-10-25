@@ -14,6 +14,7 @@
 #include <string.h>
 #include <assert.h>
 #include <stdarg.h>
+#include <stdlib.h>
 
 using namespace SQLJson;
 
@@ -145,6 +146,23 @@ Query::Query() {
 	}
 }
 
+Query::~Query() {
+	while (!list_live.empty()) {
+		Live* _live = list_live.front();
+		while (!_live->list_data.empty()) {
+			Data* _data = _live->list_data.front();
+			_data->is_live = false;
+			_data->live = NULL;
+			_live->list_data.pop_front();
+		}
+		delete _live;
+		list_live.pop_front();
+	}
+	if(db)
+		sqlite3_close(db);
+	remove(DB_PATH.c_str());
+}
+
 int Query::_SQL_DATA_CALLBACK(void* _reference, int _field_length, char** _field, char** _field_name) {
 	typedef struct info {
 		std::vector<SQLJson::Data*> _vec;
@@ -177,7 +195,9 @@ int Query::_SQL_DATA_CALLBACK(void* _reference, int _field_length, char** _field
 
 int Query::_SQL_COUNT_CALLBACK(void* _reference, int _field_length, char** _field, char** _field_name) {
 	int* _count = (int*)_reference;
-	_count++;
+	if(_field[0])
+		*_count = atoi(_field[0]);
+	
 	return 0;
 }
 
@@ -265,6 +285,14 @@ Query* Query::Share() {
 	if(__share_query == NULL)
 		__share_query = new Query();
 	return __share_query;
+}
+
+bool Query::Drop() {
+	if(__share_query)
+		delete __share_query;
+	else
+		return false;
+	return true;
 }
 
 bool Query::Add(std::string _table_name, Json::Value _value, bool _is_response) {
