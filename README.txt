@@ -1,10 +1,10 @@
 이 라이브러리는 sqlite를 이용하여 controller에서 굳이 view에게 변경사항을 전달하지 않아도 되게 할려고 만든 라이브러리입니다.
 
-1.http://jsoncpp.sourceforge.net/ 에서 jsoncpp 다운로드(SQLJson을 사용할라면 jsoncpp필요)
++ http://jsoncpp.sourceforge.net/ 에서 jsoncpp 다운로드(SQLJson을 사용할라면 jsoncpp필요)
 
-2.sqlite3필요
++ sqlite3필요
 
-3.SQLJsonQuery.h의 DB_PATH설정(사용할 db경로:최초 한번 코드호출시 생성됨)
++ SQLJsonQuery.h의 DB_PATH설정(사용할 db경로:최초 한번 코드호출시 생성됨)
 만일 4번의json을 바꾸면 이파일을 삭제시켜야함
 
 4.SQLJsonQuery.h의 DB_INFO_PATH설정(db의 스키마 정보 json경로)
